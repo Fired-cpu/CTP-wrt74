@@ -1,4 +1,4 @@
-![OpenWrt logo](include/logo.png)
+![OpenWrt logo](readme/addedsugar.png)
 
 OpenWrt Project is a Linux operating system targeting embedded devices. Instead
 of trying to create a single, static firmware, OpenWrt provides a fully
