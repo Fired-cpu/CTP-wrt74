@@ -673,7 +673,6 @@ define Device/tplink_tl-wdr7400-v2
   DEVICE_VARIANT := v2
   DEVICE_PACKAGES := kmod-usb-core kmod-usb2 kmod-usb-ledtrig-usbport \
 	kmod-ath9k kmod-ath10k-ct ath10k-firmware-qca988x-ct
-  IMAGE_SIZE := 8000k
   KERNEL := kernel-bin | append-dtb | lzma | uImage lzma
   KERNEL_INITRAMFS := kernel-bin | append-dtb | lzma | uImage lzma
   TPLINK_HWID := 0x74000002
