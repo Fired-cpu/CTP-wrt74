@@ -1,14 +1,14 @@
-name: Build System from ``.config``
+name: Build System from .config
 
 on: 
   workflow_dispatch:
 
 jobs:
   build:
-  # I use 24.04 as this version use gcc15 and also i like it (for compiling).
+    # I use 24.04 as this version use gcc15 and also i like it (for compiling).
     runs-on: ubuntu-24.04
     steps:
-    # Remove scraps from AWS emulated run
+      # Remove scraps from AWS emulated run
       - name: Optimize space
         uses: jlumbroso/free-disk-space@main
         with:
@@ -22,15 +22,18 @@ jobs:
 
       - name: Install and update essentials with dependencies
         run: |
-        apt update
-        apt install -y build-essential clang flex bison g++ gawk gcc-multilib g++-multilib gettext git libncurses-dev libssl-dev python3-distutils python3-setuptools rsync swig unzip zlib1g-dev file wget
+          sudo apt update
+          sudo apt install -y build-essential clang flex bison g++ gawk gcc-multilib g++-multilib gettext git libncurses-dev libssl-dev python3-distutils python3-setuptools rsync swig unzip zlib1g-dev file wget
 
       - name: Fetch data from SweetR74
-        run:
-        git clone --single-branch -b sweetr74 https://github.com/Fired-cpu/CTP-wrt74
-        cd CTP-wrt74 && ./scripts/feeds update -a
-        ./scripts/feeds install -a
+        run: |
+          git clone --single-branch -b sweetr74 https://github.com/Fired-cpu/CTP-wrt74
+          cd CTP-wrt74
+          ./scripts/feeds update -a
+          ./scripts/feeds install -a
 
       - name: Executing compile process
         run: |
-        make download && make
+          cd CTP-wrt74
+          make defconfig
+          make -j$(nproc)
