@@ -35,12 +35,13 @@ jobs:
           ./scripts/feeds update -a
           ./scripts/feeds install -a
 
-      - name: Executing compile process
+      - name: Executing compile process   # clean residues of previous attempts, which result in only 1 file was compressed.
         run: |
           cd CTP-wrt74
+          make clean
           make download
           make -j$(nproc)
-      - name: Organize, Zip and Prepare Firmware Files
+      - name: Organize, Zip and Prepare Firmware Files  # Scan and copy any .bin or .trx from bin/target to the created folder, which is then zipped for download.
         run: |
           mkdir -p firmware_bin/
           # Finds all compiled image files and copies them to our staging directory
@@ -52,7 +53,7 @@ jobs:
           # Set a unique release tag based on the current date and time
           echo "RELEASE_TAG=OpenWrt-Build-$(date +'%Y.%m.%d-%H%M')" >> $GITHUB_ENV
 
-      - name: Provide Direct Download Link (Artifact)
+      - name: Provide Direct Download Link (Artifact)  # Provide links for taking the generated artifacts.
         uses: actions/upload-artifact@v4
         with:
           name: openwrt-compiled-firmware
