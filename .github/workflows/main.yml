@@ -38,5 +38,28 @@ jobs:
       - name: Executing compile process
         run: |
           cd CTP-wrt74
-          make defconfig
+          make download
           make -j$(nproc)
+      - name: Organize, Zip and Prepare Firmware Files
+        run: |
+          mkdir -p firmware_bin/
+          # Finds all compiled image files and copies them to our staging directory
+          find CTP-wrt74/bin/targets/ -type f \( -name "*.bin" -o -name "*.trx" \) -exec cp {} firmware_bin/ \;
+          
+          # Create a compressed zip file of the folder
+          zip -r openwrt-firmware.zip firmware_bin/
+          
+          # Set a unique release tag based on the current date and time
+          echo "RELEASE_TAG=OpenWrt-Build-$(date +'%Y.%m.%d-%H%M')" >> $GITHUB_ENV
+
+      - name: Upload Firmware Zip to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ env.RELEASE_TAG }}
+          name: "OpenWrt Compiled Firmware (${{ env.RELEASE_TAG }})"
+          body: "Automated custom OpenWrt build generated via GitHub Actions."
+          draft: false
+          prerelease: false
+          # Upload only the compressed .zip archive instead of individual files
+          files: openwrt-firmware.zip
+
