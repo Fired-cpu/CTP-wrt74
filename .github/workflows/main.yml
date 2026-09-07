@@ -52,14 +52,10 @@ jobs:
           # Set a unique release tag based on the current date and time
           echo "RELEASE_TAG=OpenWrt-Build-$(date +'%Y.%m.%d-%H%M')" >> $GITHUB_ENV
 
-      - name: Upload Firmware Zip to GitHub Release
-        uses: softprops/action-gh-release@v2
+      - name: Provide Direct Download Link (Artifact)
+        uses: actions/upload-artifact@v4
         with:
-          tag_name: ${{ env.RELEASE_TAG }}
-          name: "OpenWrt Compiled Firmware (${{ env.RELEASE_TAG }})"
-          body: "Automated custom OpenWrt build generated via GitHub Actions."
-          draft: false
-          prerelease: false
-          # Upload only the compressed .zip archive instead of individual files
-          files: openwrt-firmware.zip
-
+          name: openwrt-compiled-firmware
+          path: openwrt-firmware.zip
+          retention-days: 7  # The file will automatically delete itself after 7 days to save space
+ 
